@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Tarefas</title>
+</head>
+<body>
+
+    <h2>Lista de Tarefas</h2>
+
+    <label for="taskInput">Nova Tarefa:</label>
+    <input type="text" id="taskInput" placeholder="Nome da Tarefa">
+    
+    <label for="categoryInput">Categoria da Tarefa:</label>
+    <input type="text" id="categoryInput" placeholder="Área da Tarefa">
+
+    <button onclick="addTask()">Adicionar Tarefa</button>
+
+    <ul id="taskList"></ul>
+
+    <script>
+        var tasks = []; 
+
+        function addTask() {
+            var taskInput = document.getElementById("taskInput");
+            var categoryInput = document.getElementById("categoryInput");
+
+            var taskName = taskInput.value;
+            var taskCategory = categoryInput.value;
+
+            if (taskName !== "" && taskCategory !== "") {
+                var task = {
+                    id: tasks.length + 1,
+                    name: taskName,
+                    category: taskCategory
+                };
+
+                tasks.push(task);
+                displayTasks();
+                taskInput.value = "";
+                categoryInput.value = "";
+            }
+        }
+
+        function displayTasks() {
+            var taskList = document.getElementById("taskList");
+            taskList.innerHTML = ""; // Limpa a lista
+
+            for (var i = 0; i < tasks.length; i++) {
+                var listItem = document.createElement("li");
+                listItem.appendChild(document.createTextNode(`${tasks[i].id} - ${tasks[i].name} (${tasks[i].category})`));
+
+                var editButton = document.createElement("button");
+                editButton.appendChild(document.createTextNode("Editar"));
+                editButton.setAttribute("onclick", "editTask(" + tasks[i].id + ")");
+                listItem.appendChild(editButton);
+
+                var removeButton = document.createElement("button");
+                removeButton.appendChild(document.createTextNode("Remover"));
+                removeButton.setAttribute("onclick", "removeTask(" + tasks[i].id + ")");
+                listItem.appendChild(removeButton);
+
+                taskList.appendChild(listItem);
+            }
+        }
+
+        function editTask(id) {
+            var newName = prompt("Digite o novo título da tarefa:");
+            
+            if (newName !== null) {
+                var taskIndex = tasks.findIndex(task => task.id === id);
+                if (taskIndex !== -1) {
+                    tasks[taskIndex].name = newName;
+                    displayTasks();
+                }
+            }
+        }
+
+        function removeTask(id) {
+            tasks = tasks.filter(task => task.id !== id);
+            displayTasks();
+        }
+    </script>
+</body>
+</html>
